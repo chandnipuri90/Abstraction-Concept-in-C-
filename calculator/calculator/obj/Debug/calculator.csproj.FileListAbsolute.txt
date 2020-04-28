@@ -1,0 +1,10 @@
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\bin\Debug\calculator.exe.config
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\bin\Debug\calculator.exe
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\bin\Debug\calculator.pdb
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\obj\Debug\calculator.csprojAssemblyReference.cache
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\obj\Debug\calculator.Form1.resources
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\obj\Debug\calculator.Properties.Resources.resources
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\obj\Debug\calculator.csproj.GenerateResource.cache
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\obj\Debug\calculator.csproj.CoreCompileInputs.cache
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\obj\Debug\calculator.exe
+C:\Users\chandni1\Desktop\INCEDO\calculator\calculator\obj\Debug\calculator.pdb

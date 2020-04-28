@@ -1,0 +1,620 @@
+use incedo
+
+select count (*) from Cricketer_ODI_Statistics order by Half_Century desc
+
+create table EmployeeDetails( empid varchar(50) not null primary key ,FullName varchar(60), ManagerId varchar(50),DateOfJoining date )
+ 
+ 
+ insert into EmployeeDetails values  ('121','John',321,'12-09-2019')
+ insert into EmployeeDetails values  ('122','Keran',322,'12-09-2019')
+ insert into EmployeeDetails values  ('123','Nik',323,'12-09-2019')
+ insert into EmployeeDetails values  ('124','Olga',324,'10-04-2019')
+ insert into EmployeeDetails values  ('125','Pamela',325,'01-09-2019')
+ insert into EmployeeDetails values  ('126','Dimtry',326,'02-07-2019')
+ insert into EmployeeDetails values (127,'perry' ,327 , '2019-9-09')
+ insert into EmployeeDetails values (129,'perry' ,329 , '2019-9-09')
+ insert into EmployeeDetails values (128,'perry' ,328 , '2019-9-09')
+
+ 
+update EmployeeDetails set FullName= 'diyan' where empid=126
+
+update EmployeeDetails set FullName= 'John Perry' where empid=121
+
+
+select * from EmployeeDetails
+
+empid	FullName	ManagerId	DateOfJoining
+121	John Perry	321		2019-12-09
+122	keran kerry	322		2019-12-09
+123	Nik		323		2019-12-09
+124	Olga		324		2019-10-04
+125	Pamela		325		2019-01-09
+126	diyan		326		2019-02-07
+127	herry		327		2019-09-09
+128	perry		328		2019-09-09
+129	perry		329		2019-09-09
+
+
+
+
+update command  used for data manipulation from database and Alter command used for change the structure of table like alter table delete ,rename ,modify, drop table
+
+ create table EmployeSalary( empid varchar(50) foreign key (empid) references employeedetails(empid) ,project varchar(50),salary money )
+ 
+ insert into EmployeSalary values('121','p1',120000)
+ insert into EmployeSalary values('122','p1',320000)
+ insert into EmployeSalary values('123','p2',220000)
+ insert into EmployeSalary values('124','p2',420000)
+ insert into EmployeSalary values('125','p3',920000)
+ insert into EmployeSalary values('126','p3',190000)
+ insert into EmployeSalary values('127','p4',120000)
+
+ select * from EmployeSalary
+
+empid	project	salary
+121	p1	120000.00
+122	p1	320000.00
+123	p2	220000.00
+124	p2	420000.00
+125	p3	920000.00
+126	p3	190000.00
+127	p3	120000.00
+128	p3	NULL
+
+insert into EmployeeDetails values (129,'perry' ,32 , '2019-9-09')
+insert into EmployeSalary values (127,'p3', 120000)
+
+Q1) Write a SQL query to fetch the count of employees working in project 'P1'.
+Ans select count( *) from EmployeSalary where project ='P1' 
+
+Q2)  Write a SQL query to fetch employee names having salary greater than or equal to 10,000 and less than or equal 40,000.
+
+Ans select fullname from EmployeeDetails ed join EmployeSalary es on ed.empid= es.empid where salary between 100000 and 400000
+
+
+Ed,es are the alias
+Q3) Write a SQL query to fetch project-wise count of employees sorted by project's count in descending order.
+
+Ans 		select count(*), project from EmployeSalary group by project order by project desc
+
+Project wise means use group by and condition is that always need to use aggregate function when use group by clause
+
+Note: group by clause is executing by taking any coulmn name but condition is that wheather in select statement must have any agggregate function 
+(select count(managerid) from EmployeeDetails group by FullName)or select statemnent must have column name which is grouped by that column
+(select ManagerId from EmployeeDetails group by ManagerId,FullName).
+
+Note:- whatever column u will add in select statement it must be either in aggregate function or group by clause other wise it will give error 
+ like  select count(ManagerId)  from EmployeeDetails group by ManagerId(give accurate output)
+  
+Error in this case :-because fullname column not exist in group by means to say we have to take select column in group by clause otherwise throw error
+			select count(ManagerId),fullname  from EmployeeDetails group by ManagerId   
+
+Error Statement:-
+			Msg 8120, Level 16, State 1, Line 38
+			Column 'EmployeeDetails.FullName' is invalid in the select list because it is not contained in either an aggregate function or
+		        the GROUP BY clause.
+
+solution :
+		select count(ManagerId),fullname  from EmployeeDetails group by ManagerId,FullName
+
+
+
+O/P 
+(No column name)	fullname
+1			Ander
+1			diyan
+1			herry
+1			John Perry
+1			keran kerry
+1			Nik
+1			olga
+1			Olga
+1			olga
+1			Pamela
+1			perry
+
+Ques.4. Write a query to fetch only the first name(string before space) from the FullName column of EmployeeDetails table.
+Ans. In this question, we are required to first fetch the location of the space character in the FullName field and then extract the first name out of the
+	 FullName field. For finding the location we will use CHARINDEX in SQL SERVER and for fetching the string before space, we will use SUBSTRING method.
+	Charindex help to fetch the index
+	Substring is a inbuilt function  needs 3 arguments 1) expression ,2) starting Position  is in int ,3)length is in int.
+
+			SELECT SUBSTRING(FullName, 0, 8) FROM EmployeeDetails;
+
+o/p
+(No column name)
+John Pe
+keran k
+Nik
+Olga
+Pamela
+diyan
+
+select  CHARINDEX('e',FullName) from EmployeeDetails
+
+o/p
+(No column name)
+7
+2
+0
+0
+4
+0
+
+Here it gives the index of e character wherever the e is present in the column of fullname
+
+Ans SELECT SUBSTRING(FullName , 0, CHARINDEX(' ',FullName)) FROM EmployeeDetails;
+
+When we use it is with substring it means it will give u substring before this letter but in our question we need letter before space so provide space in 
+charindex query
+
+Q5) Write a query to fetch employee names and salary records. Return employee details even if the salary record is not present for the employee.
+
+select fullname, salary from EmployeeDetails join EmployeSalary on EmployeeDetails.empid=EmployeSalary.empid
+
+fullname	salary
+John Perry	120000.00
+keran kerry	320000.00
+Nik		220000.00
+Olga		420000.00
+Pamela		920000.00
+diyan		190000.00
+herry		120000.00
+perry		NULL
+ 
+
+(join queries) on two customer and department tableb
+
+select * from Customer
+
+Id	AddedDate			ModifiedDate			IPAddress	FirstName	LastName	Email			MobileNo
+1	2019-05-29 16:53:52.7070000	2019-05-29 16:53:52.7070000	10.12.13.1	Chandni		Puri		chandni@incedoinc.com	8787656554
+2	2019-05-29 16:54:16.3800000	2019-05-29 16:54:16.3800000	11.12.13.1	Chandni1	Puri		rupali@gmail.com	9787656554
+
+
+1)select * from department
+
+depid	depname	toilerid
+1	cse	101
+3	CE	104
+4	FS	105
+5	FS	102
+6	FS	108
+
+
+2)select * from Customer join department on Customer.Id=department.depid(give common entries from both table)
+
+Id	AddedDate			ModifiedDate			IPAddress	FirstName	LastName	Email	MobileNo	depid	depname	toilerid
+1	2019-05-29 16:53:52.7070000	2019-05-29 16:53:52.7070000	10.12.13.1	Chandni	Puri	chandni@incedoinc.com	8787656554	1	cse	101
+
+3)select * from Customer left join department on Customer.Id=department.depid
+
+Id	AddedDate			ModifiedDate			IPAddress	FirstName	LastName	Email			MobileNo	depid	depname	toilerid
+1	2019-05-29 16:53:52.7070000	2019-05-29 16:53:52.7070000	10.12.13.1	Chandni		Puri		chandni@incedoinc.com	8787656554	1	cse	101
+2	2019-05-29 16:54:16.3800000	2019-05-29 16:54:16.3800000	11.12.13.1	Chandni1	Puri		rupali@gmail.com	9787656554	NULL	NULL	NULL
+
+
+4)select * from department left join Customer on Customer.Id=department.depid
+
+depid	depname	toilerid	Id	AddedDate			ModifiedDate			IPAddress	FirstName	LastName	Email	MobileNo
+1	cse	101		1	2019-05-2916:53:52.7070000	2019-05-29 16:53:52.7070000	10.12.13.1	Chandni	Puri	chandni@incedoinc.com	8787656554
+3	CE	104		NULL	NULL				NULL				NULL		NULL		NULL		NULL	NULL
+4	FS	105		NULL	NULL				NULL				NULL		NULL		NULL		NULL	NULL
+5	FS	102		NULL	NULL				NULL				NULL		NULL		NULL		NULL	NULL
+6	FS	108		NULL	NULL				NULL				NULL		NULL		NULL		NULL	NULL
+
+
+5)select Customer.FirstName,Customer.LastName ,department.depname from department left join customer on  Customer.Id=department.depid
+								or
+select FirstName,LastName ,depname from department left join customer on  Customer.Id=department.depid
+
+FirstName	LastName	depname
+Chandni		Puri		cse
+NULL		NULL		CE
+NULL		NULL		FS		(same output as following here no difference betweeen left join and right if we shift the tables as left is fixed and other is comparable with this)
+NULL		NULL		FS
+NULL		NULL		FS
+
+
+6)select FirstName,LastName ,depname from customer right join department on  Customer.Id=department.depid
+
+
+FirstName	LastName	depname
+Chandni		Puri		cse
+NULL		NULL		CE
+NULL		NULL		FS      	(same output as above)
+NULL		NULL		FS
+NULL		NULL		FS
+
+7) select FirstName,LastName ,depname from department right join customer on  Customer.Id=department.depid
+
+FirstName	LastName	depname
+Chandni		Puri		cse
+Chandni1	Puri		NULL
+
+
+8)select * from department full outer join Customer on Customer.Id=department.depid
+
+depid	depname	toilerid	Id				AddedDate			ModifiedDate			IPAddress	FirstName	LastName	Email			MobileNo
+1	cse	101		1				2019-05-29 16:53:52.7070000	2019-05-29 16:53:52.7070000	10.12.13.1	Chandni		Puri		chandni@incedoinc.com	8787656554
+NULL	NULL	NULL		2				2019-05-29 16:54:16.3800000	2019-05-29 16:54:16.3800000	11.12.13.1	Chandni1	Puri		rupali@gmail.com	9787656554
+3	CE	104		NULL				NULL				NULL				NULL		NULL		NULL		NULL			NULL
+4	FS	105		NULL				NULL				NULL				NULL		NULL		NULL		NULL			NULL
+5	FS	102		NULL				NULL				NULL				NULL		NULL		NULL		NULL			NULL
+6	FS	108		NULL				NULL				NULL				NULL		NULL		NULL		NULL			NULL
+
+
+create table employeeTransportation( empid varchar(50) foreign key references employeedetails(empid)  , allowance varchar(50),empaddress varchar(50)) 
+
+ 	insert into employeeTransportation values (121,'1200','Gurgaon')
+ 	insert into employeeTransportation values (122,'1200','Gurgaon')
+   	insert into employeeTransportation values (123,'1400','Gurgaon')
+        insert into employeeTransportation values (124,'1200','Delhi')
+	insert into employeeTransportation values (125,'1200','Faridabad')
+
+	select * from employeeTransportation
+
+o/p
+empid	allowance	empaddress
+121	1200		Gurgaon
+122	1200		Gurgaon
+123	1400		Gurgaon
+124	1200		Delhi
+125	1200		Faridabad
+
+
+	alter table employeetransportation add  Tempid varchar(50)
+
+	update employeeTransportation set tempid=121 where empid=121
+	update employeeTransportation set tempid=122 where empid=122
+	update employeeTransportation set tempid=123 where empid=123
+	update employeeTransportation set tempid=124 where empid=124
+	update employeeTransportation set tempid=125 where empid=125
+
+
+join on three tables 
+
+one table transportation having no foreign key but empid is same with all other two tables still it will give output by applying join but processing will be slow to
+ get more data if we have thousands of records so always have refrence key )
+
+	 select fullname , salary ,allowance from EmployeeDetails join EmployeSalary on EmployeeDetails.empid=EmployeSalary.empid join employeeTransportation 
+	on EmployeSalary.empid= employeeTransportation.empid where(salary>12000 and allowance>1200)
+
+o/p
+
+fullname	salary		allowance
+Nik		220000.00	1400
+
+
+Q9)Write a SQL query to fetch all the Employees who are also managers from EmployeeDetails table.
+
+
+Ans. Here, we have to use Self-Join as the requirement wants us to analyze the EmployeeDetails table as two different tables, each for Employee and manager records.
+
+we have to use alias of table otherwise it will give error of ambiguity coz we use self join means join on same table
+
+
+       
+			select  e.fullname from EmployeeDetails e join EmployeeDetails f on e. empid= f.ManagerId
+
+			
+			select  distinct e.fullname from EmployeeDetails e join EmployeeDetails f on e. empid= f.ManagerId
+
+distinct will help to give unique employees name if u have dublicacy in table
+
+# Referential Integrity(foreign key in child table which will be primar key in parent table)
+
+#(without having foreign key in employeefacility table join is possible by having same coulumn name and same value as empid column 
+		in employee details and employeefacilities but it is not the safest thing in the database as 
+		foreign key is used to prevent update/deletion anomalies(duplicacy) in database to prevent discrepencies.Means that 
+		nobody can not delete the data from any table coz the table having foreign key which will be primary key of another 
+		so it will not be possible to delete the data or update the data from table having foreign key)
+
+
+for example 
+
+1) 	employesalary table having empid as foreign key by employedetails's column empid as primary key now i m trying to add or insert
+	data in employeesalary it will not be possible coz i am adding new employeeid 130 which is not having in main table employeetable having empid as primary key
+
+
+  insert EmployeSalary values (130,'p2',440000)
+
+ERROR(foreign key is empid we are giving value is 130 which is not in parent table(having empid as primary key)insertion on foreign key is not possible
+
+        Msg 547, Level 16, State 0, Line 21
+	The INSERT statement conflicted with the FOREIGN KEY constraint "FK__EmployeSa__empid__03F0984C". 
+	The conflict occurred in database "incedo", table "dbo.EmployeeDetails", column 'empid'.
+	The statement has been terminated.
+
+2) 	No want to update the foreign key in child table employesalary
+
+  		update EmployeSalary set  empid=1277 where project='p1'
+
+ERROR
+
+Msg 547, Level 16, State 0, Line 28
+	
+	The UPDATE statement conflicted with the FOREIGN KEY constraint "FK__EmployeSa__empid__03F0984C". 
+	The conflict occurred in database "incedo", table "dbo.EmployeeDetails", column 'empid'.
+	The statement has been terminated.
+
+
+So, updation or Insertion is not possible on the column of foreign key of table
+     
+
+ 	(without foreign key )
+
+	create table employeeFacilities ( empid varchar(50), facilities varchar(100))
+ 	insert into employeeFacilities values(121,'HeadPhones')
+  	insert into employeeFacilities values(122,'Dongal')
+   
+	select * from EmployeeDetails join employeeFacilities on EmployeeDetails.empid= employeeFacilities.empid
+
+
+Advantage of Referential Integrity in RDBMS and SQL
+
+There are several benefit of Referential Integrity in relational database and maintaining integrity of data among parent and child tables. 
+Here are some of the most noticed advantages of Referential Integrity in SQL:
+
+1) Referential Integrity prevents inserting records with incorrect details in table. Any insert or update operation will fail if it doesn't 
+satisfy referential integrity rule.
+
+2) If a records from parent table is deleted, referential integrity allows to delete all related records from child table using cascade-delete functionality.
+
+3) Similar to second advantage if a record i.e. customer_id of a customer is updated on parent table (Customer table) , Referential Integrity 
+helps to update customer_id in child table (Order) using cascade-update.
+
+DELETE CASCADE: (Cascade need to do on Child Table only on the foreign key so use "on cascade delete"only on Foreign key)When we create a foreign key using this option, 
+it deletes the referencing rows in the child table when the referenced row is 
+deleted in the parent table which has a primary key.(if we delete any thing in parent table then automatticalyy child table data is deleted)
+
+
+example---------------------
+
+CREATE TABLE Countries
+ 
+(CountryID INT PRIMARY KEY,
+CountryName VARCHAR(50),
+CountryCode VARCHAR(3))
+ 
+
+ CREATE TABLE states (
+   StateID  INT
+    FOREIGN KEY(StateID)
+        REFERENCES Countries(CountryID)  ON DELETE CASCADE, StateName varchar(50),StateCode varchar(10)
+       )
+		
+
+
+INSERT INTO Countries VALUES (1,'United States','USA')
+ 
+INSERT INTO Countries VALUES (2,'United Kingdom','UK')
+ 
+INSERT INTO States VALUES (1,'Texas','TX')
+INSERT INTO States VALUES (2,'Arizona','AZ')
+
+select * from Countries
+
+O/P
+
+CountryID	CountryName		CountryCode
+1		United States		USA
+2		United Kingdom		UK
+
+Select * from states
+
+O/P
+
+StateID		StateName	StateCode
+1		Texas		TX
+2		Arizona		AZ
+
+
+Now see, I will delete the data from parent table(Countries) but automatically it will be deleted from child table(States) as well
+
+
+delete Countries where CountryID=2
+
+select * from Countries
+
+CountryID	CountryName		CountryCode
+1		United States		USA
+
+
+Select * from states(here see child table is automatically deleted data d=from id=2 even we have not execute delete query on the child table state)
+
+
+StateID		StateName	StateCode
+1		Texas		TX
+
+
+UPDATE CASCADE: When we create a foreign key using UPDATE CASCADE the referencing rows are updated in the child table when the referenced row is 
+updated in the parent table which has a primary key.
+
+NOTE:DIFFERENCE BETWEEN (SELECT INTO) AND (INSERT INTO SELECT)
+
+###### SELECT * INTO TARGETTABLE FROM SOURCETABLE2(COPY STRAUCTURE AND TABLE)
+###### SELECT * INTO TARGETTABLE FROM SOURCETABLE2 WHERE 1=2(COPY ONLY STRUCTURE IN TARGET TABLE)
+###### INSERT INTO TARGETTABLE SELECT * FROM SOURCETABLE(COPY ONLY DATA IN TARGET TABLE FROM SOURCETABLE)
+
+Ques.10. Write a SQL query to create a new table with data and structure copied from another table.
+
+Using SELECT INTO command-by this it will create structure of employeedetails table as well as data is also transferred from employeedetails table to new table 
+which is newTbale
+
+
+	SELECT * INTO newTable FROM EmployeeDetails 
+
+Note :- it will copy the details of employeedetails table to newtable once by executing this query but if u delete the data f
+from newtable (delete from newtable ) then all rows will be deleted from newtable so now again there is rquirement to insert data again in newtable from employeedetails 
+then u will try to execute same query (select * into newtable from employeedetails) it will throw error as coz this query already executed for new table as it is copy 
+the structure of table as well as data now after executing delete query we just deleted the data not structure so that is why it thrw error .
+
+
+now we will use the query 
+
+					(insert into newtable select * from employeedetails)
+								or
+					insert into newTable(empid,fullname,ManagerId,DateOfJoining) select empid,fullname,ManagerId,DateOfJoining from employeedetails
+
+it always copy the data from one table to another table(all rows copied from employedetails to newtable)
+
+NOTE:
+
+To want copy data from one table to another some column that is also possible(full name is not copied so it will have null value in target table)
+
+				insert into newTable(empid,ManagerId,DateOfJoining) select empid,ManagerId,DateOfJoining from employeedetails
+			o/p    13 rows are affected
+
+select * from newtable
+
+o/p
+
+empid	FullName	ManagerId	DateOfJoining
+121	NULL		321		2019-12-09
+122	NULL		322		2019-12-09
+123	NULL		323		2019-12-09
+124	NULL		324		2019-10-04
+125	NULL		325		2019-01-09
+126	NULL		326		2019-02-07
+127	NULL		327		2019-09-09
+128	NULL		328		2019-09-09
+129	NULL		126		2018-12-09
+321	NULL		989		2019-12-09
+322	NULL		979		2019-12-09
+325	NULL		321		2019-12-09
+326	NULL		321		2019-12-09
+
+
+
+NOTE:	we can copy some rows as well from source table to target table by applying condition in where clause 
+
+
+insert into newTable(empid,ManagerId,DateOfJoining) select empid,ManagerId,DateOfJoining from employeedetails where empid in ('121','122','123','124')
+
+o/p -----4 rows are affected
+
+
+Ques.11. Write a SQL query to create an empty table with same structure as some other table.
+Ans. Using SELECT INTO command with False 'WHERE' condition - here we just want to create structure of employeedetails table but now data then we will apply 
+condition which is 1=0
+
+
+
+	SELECT * INTO newTable1 FROM EmployeeDetails WHERE 1 = 0;
+
+
+
+
+Q12) Write a SQL query to find NTh higehst salary from table ?
+
+
+ANS : find first  highest salary then we use max function
+			
+				select max(salary) from employetable 
+
+			O/P:	920000
+
+similarly we can find 2nd highest salary with max function 
+
+				select max(salary) from EmployeSalary where salary<(select max(salary) from EmployeSalary) 
+
+			O/P:	420000
+
+similarly we can find 3rd highest salary as well with max function
+
+				
+		select max(salary) from EmployeSalary where salary <(select max(salary) from EmployeSalary where salary<(select max(salary) from EmployeSalary))
+
+			O/P:	320000
+
+Note: we can calculate by this any nth number of max salary but problem is length of query is increasing and performance is reduced so need to take another
+      method to find nth highest salary from table
+
+			 
+			
+				
+            SELECT MIN(salary) FROM EmployeSalary WHERE  salary IN (SELECT DISTINCT TOP N  salary FROM EmployeSalary ORDER BY salary DESC)
+
+
+
+# SubQuery in SQL is a query inside another query. Some time to get a particular information from database you may 
+need to fire two separate sql queries, subQuery is a way to combine or join them in single query. SQL query which
+ is on inner part of main query is called inner query while outer part of main query is called outer query. for example 
+in below sql query
+
+			    
+   
+# Null Statement 
+
+
+select * from EmployeSalary where salary = null
+
+
+O/P
+     empid project salary 
+
+
+
+means u will not get any output as u have to use IS NULL and IS NOT NULL		
+
+select * from EmployeSalary where salary is null
+			
+O/P	
+
+empid	project	salary
+128	p3	NULL
+
+		
+# 
+select * from EmployeSalary where salary is  not null
+
+empid	project	salary
+121	p1	120000.00
+122	p1	320000.00
+123	p2	220000.00
+124	p2	420000.00
+125	p3	920000.00
+126	p3	190000.00
+127	p3	12333.00
+129	p1	120000.00
+
+
+
+
+
+
+
+### OFFSET FETCH
+OFFSET FETCH clauses to limit the number of rows returned by a query.
+
+--The OFFSET clause specifies the number of rows to skip before starting to return rows from the query.The offset_row_count
+ can be a constant, variable, or parameter that is greater or equal to zero.
+
+---The FETCH clause specifies the number of rows to return after the OFFSET clause has been processed. The offset_row_count
+ can a constant, variable or scalar that is greater or equal to one.
+
+---The OFFSET clause is mandatory while the FETCH clause is optional. Also, the FIRST and NEXT are synonyms respectively 
+so you can use them interchangeably. Similarly, you can use the FIRST and NEXT interchangeably.
+
+
+
+
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
